@@ -4,6 +4,11 @@ const dbase = require('./dbase');
 const db = new dbase();
 const passport = require('passport');
 const Strategy = require('passport-http-bearer').Strategy;
+const helmet = require('helmet');
+
+app.use(helmet());
+app.use(require('morgan')('combined'));
+app.use(express.json());
 
 // Token set in env variable in shell script
 const accept_token = process.env.ACCEPT_TOKEN
@@ -18,9 +23,6 @@ passport.use(new Strategy(
   }
 ));
 
-app.use(require('morgan')('combined'));
-app.use(express.json());
-
 app.post('/readings', 
   passport.authenticate('bearer', { session: false }),
   function(req, res){
@@ -28,8 +30,7 @@ app.post('/readings',
 
     db.insert(data)
     .then(function() {
-      res.status = 200;
-      res.send();
+      res.status(200).send();
     })
     .catch(function(err) {
       console.log(err.stack);
