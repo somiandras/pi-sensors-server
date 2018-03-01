@@ -4,7 +4,7 @@
   "description": "Simple server for home sensor data collection and retrieval",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "./run.sh",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -16,6 +16,8 @@
   "dependencies": {
     "express": "^4.16.2",
     "mongodb": "^3.0.3",
-    "morgan": "^1.9.0"
+    "morgan": "^1.9.0",
+    "passport": "^0.4.0",
+    "passport-http-bearer": "^1.0.1"
   }
 }
