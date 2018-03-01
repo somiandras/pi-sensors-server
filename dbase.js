@@ -19,6 +19,27 @@ class db {
       return Promise.resolve(true);
     });
   }
+
+  getData() {
+    return MongoClient.connect(url)
+    .then(function(c) {
+      client = c;
+      const db = client.db(name);
+      return db.collection('sensors')
+      .find()
+      .sort({date: -1})
+      .limit(30)
+      .toArray();
+    })
+    .then(function(data) {
+      assert.equal(30, data.length);
+      client.close();
+      data.sort((a, b) => {
+        return new Date(a.date) - new Date(b.date)
+      })
+      return Promise.resolve(data);
+    });
+  }
 }
 
 module.exports = db;

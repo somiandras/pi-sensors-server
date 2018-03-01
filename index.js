@@ -29,6 +29,17 @@ app.get('/', function(req, res) {
   res.render('index');
 });
 
+app.get('/readings', function(req, res) {
+  db.getData()
+  .then(function(data) {
+    res.status(200).send(JSON.stringify(data));
+  })
+  .catch(function(err) {
+    console.log(err.stack);
+    res.status(500).send();
+  })
+});
+
 app.post('/readings', 
   passport.authenticate('bearer', { session: false }),
   function(req, res){
