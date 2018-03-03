@@ -8,7 +8,9 @@
     let labels = data
     .map(elem => {
       let date = new Date(elem.date);
-      let label = date.getHours() + ':' + date.getMinutes();
+      let hours = date.getHours();
+      let minutes = '0' + date.getMinutes()
+      let label = hours + ':' + minutes.substr(minutes.length - 2);
       return label;
     });
 
@@ -22,9 +24,21 @@
       new Chartist.Line(id, {
         labels: labels,
         series: [s]
+      }, {
+        axisX: {
+          labelOffset: {y: 5}
+        },
+        chartPadding: {
+          top: 20,
+          bottom: 20,
+          left: 20,
+          right: 20
+        }
       });
     });
   })
-  xhr.open('GET', 'http://localhost:3000/readings');
+  xhr.open('GET', '/readings');
   xhr.send();
 })();
+
+
