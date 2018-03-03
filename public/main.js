@@ -1,12 +1,8 @@
 (function(){
   'use strict';
 
-  let xhr = new XMLHttpRequest()
-  xhr.addEventListener('load', function() {
-    let data = JSON.parse(this.responseText);
-    
-    let labels = data
-    .map(elem => {
+  function drawChart(data) {
+    let labels = data.map(elem => {
       let date = new Date(elem.date);
       let hours = date.getHours();
       let minutes = '0' + date.getMinutes()
@@ -17,7 +13,7 @@
     let temps = data.map(elem => elem.temp);
     let humis = data.map(elem => elem.humi);
     let luxes = data.map(elem => elem.lux);
-    
+
     let dataSeries = [temps, humis, luxes];
     dataSeries.forEach((s, i) => {
       let id = '#chart' + (i + 1);
@@ -36,9 +32,20 @@
         }
       });
     });
-  })
-  xhr.open('GET', 'readings');
-  xhr.send();
+  }
+
+  function getData() {
+    let xhr = new XMLHttpRequest();
+    xhr.addEventListener('load', function() {
+      if (this.status == 200) {
+        let data = JSON.parse(this.responseText);
+        drawChart(data);
+      }
+    });
+    xhr.open('GET', 'readings');
+    xhr.send();
+  }
+
+  getData();
+  let interval = setInterval(getData, 60000);
 })();
-
-
