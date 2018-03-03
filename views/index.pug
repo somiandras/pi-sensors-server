@@ -1,0 +1,23 @@
+doctype html
+html
+  include head.pug
+  
+  body
+    div(class='container')
+      div(class='row')
+        div(class='col')
+          h1 Monitoring
+      div(class='row')
+        div(class='col')
+          h3 Temperature
+          div(class='ct-chart ct-major-twelfth' id='chart1')
+      div(class='row')
+        div(class='col')
+          h3 Humidity
+          div(class='ct-chart ct-major-twelfth' id='chart2')
+      div(class='row')
+        div(class='col')
+          h3 Luminosity
+          div(class='ct-chart ct-major-twelfth' id='chart3')
+    script(type='text/javascript' src='public/main.js')
+    link(rel="stylesheet" href="/public/style.css")

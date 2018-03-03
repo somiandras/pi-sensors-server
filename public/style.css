@@ -1,0 +1,6 @@
+.ct-label.ct-label.ct-horizontal {
+  justify-content: flex-end;
+  text-align: right;
+  transform-origin: 100% 0;
+  transform: translate(-120%) rotate(-90deg);
+}

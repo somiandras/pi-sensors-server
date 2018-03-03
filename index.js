@@ -6,9 +6,11 @@ const passport = require('passport');
 const Strategy = require('passport-http-bearer').Strategy;
 const helmet = require('helmet');
 
+app.set('view engine', 'pug');
 app.use(helmet());
 app.use(require('morgan')('combined'));
 app.use(express.json());
+app.use("/public", express.static(__dirname + "/public"));
 
 // Token set in env variable in shell script
 const accept_token = process.env.ACCEPT_TOKEN
@@ -22,6 +24,21 @@ passport.use(new Strategy(
     }
   }
 ));
+
+app.get('/', function(req, res) {
+  res.render('index');
+});
+
+app.get('/readings', function(req, res) {
+  db.getData()
+  .then(function(data) {
+    res.status(200).send(JSON.stringify(data));
+  })
+  .catch(function(err) {
+    console.log(err.stack);
+    res.status(500).send();
+  })
+});
 
 app.post('/readings', 
   passport.authenticate('bearer', { session: false }),
@@ -40,9 +57,9 @@ app.post('/readings',
 );
 
 app.use(function (err, req, res, next) {
-  console.log(err.stack)
+  console.log(err.stack);
   res.status(500).send();
-})
+});
 
 console.log('Listening on port 3333');
 app.listen(3333);
