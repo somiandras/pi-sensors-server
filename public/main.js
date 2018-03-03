@@ -37,7 +37,7 @@
       });
     });
   })
-  xhr.open('GET', '/readings');
+  xhr.open('GET', 'readings');
   xhr.send();
 })();
 
