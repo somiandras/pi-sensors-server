@@ -1,6 +1,8 @@
 (function(){
   'use strict';
 
+  let frequency = 5;
+
   function drawChart(data) {
     let labels = data.map(elem => {
       let date = new Date(elem.date);
@@ -34,7 +36,7 @@
     });
   }
 
-  function getData() {
+  function getData(frequency) {
     let xhr = new XMLHttpRequest();
     xhr.addEventListener('load', function() {
       if (this.status == 200) {
@@ -42,10 +44,22 @@
         drawChart(data);
       }
     });
-    xhr.open('GET', 'readings');
+    xhr.open('GET', 'readings/' + frequency);
     xhr.send();
+
+    setTimeout(function() {
+      getData(frequency);
+    }, 60000);
   }
 
-  getData();
-  let interval = setInterval(getData, 60000);
+  getData(frequency);
+
+  let buttons = document.getElementsByClassName('frequencyButton');
+
+  Array.prototype.forEach.call(buttons, button => {
+    button.addEventListener('click', function(event) {
+      frequency = parseInt(event.target.getAttribute('value'));
+      getData(frequency);
+    })
+  });
 })();
