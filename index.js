@@ -33,6 +33,7 @@ app.get('/readings/:frequency?', function(req, res) {
   let frequency = parseInt(req.params.frequency) || 5;
   db.getData(frequency)
   .then(function(data) {
+    res.set({'Content-Type': 'application/json'});
     res.status(200).send(JSON.stringify(data));
   })
   .catch(function(err) {

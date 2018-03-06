@@ -28,15 +28,13 @@ class db {
       const db = client.db(name);
       return db.collection('sensors')
       .aggregate([
-        {
-          '$project': {
-            temp: 1,
-            humi: 1,
-            lux: 1,
-            date: 1,
-            min_mod: {'$mod': [{'$minute': '$date'}, frequency]}
-          }
-        },
+        {'$project': {
+          temp: 1,
+          humi: 1,
+          lux: 1,
+          date: 1,
+          min_mod: {'$mod': [{'$minute': '$date'}, frequency]}
+        }},
         {'$match': {min_mod: 0}},
         {'$project': {
           temp: 1,
