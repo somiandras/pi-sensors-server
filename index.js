@@ -29,8 +29,9 @@ app.get('/', function(req, res) {
   res.render('index');
 });
 
-app.get('/readings', function(req, res) {
-  db.getData()
+app.get('/readings/:frequency?', function(req, res) {
+  let frequency = parseInt(req.params.frequency) || 5;
+  db.getData(frequency)
   .then(function(data) {
     res.status(200).send(JSON.stringify(data));
   })

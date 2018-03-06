@@ -7,11 +7,12 @@ let client;
 
 class db {
   insert(data) {
+    data.date = new Date(data.date);
     return MongoClient.connect(url)
     .then(function(c) {
       client = c;
       const db = client.db(name);
-      return db.collection('sensors').insertOne(data)
+      return db.collection('sensors').insertOne(data);
     })
     .then(function(response) {
       assert.equal(1, response.insertedCount);
@@ -20,15 +21,32 @@ class db {
     });
   }
 
-  getData() {
+  getData(frequency) {
     return MongoClient.connect(url)
     .then(function(c) {
       client = c;
       const db = client.db(name);
       return db.collection('sensors')
-      .find()
-      .sort({date: -1})
-      .limit(30)
+      .aggregate([
+        {
+          '$project': {
+            temp: 1,
+            humi: 1,
+            lux: 1,
+            date: 1,
+            min_mod: {'$mod': [{'$minute': '$date'}, frequency]}
+          }
+        },
+        {'$match': {min_mod: 0}},
+        {'$project': {
+          temp: 1,
+          humi: 1,
+          lux: 1,
+          date: 1
+        }},
+        {'$sort': {date: -1}},
+        {'$limit': 30}
+      ])
       .toArray();
     })
     .then(function(data) {
