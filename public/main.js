@@ -2,6 +2,7 @@
   'use strict';
 
   let frequency = 5;
+  let timeout;
 
   function drawChart(data) {
     let labels = data.map(elem => {
@@ -37,6 +38,9 @@
   }
 
   function getData(frequency) {
+    if (timeout) {
+      clearTimeout(timeout);
+    }
     let xhr = new XMLHttpRequest();
     xhr.addEventListener('load', function() {
       if (this.status == 200) {
@@ -47,19 +51,19 @@
     xhr.open('GET', 'readings/' + frequency);
     xhr.send();
 
-    setTimeout(function() {
+    timeout = setTimeout(function() {
       getData(frequency);
     }, 60000);
   }
 
-  getData(frequency);
-
   let buttons = document.getElementsByClassName('frequencyButton');
 
   Array.prototype.forEach.call(buttons, button => {
-    button.addEventListener('click', function(event) {
+    button.addEventListener('click', event => {
       frequency = parseInt(event.target.getAttribute('value'));
       getData(frequency);
-    })
+    });
   });
+
+  getData(frequency);
 })();
